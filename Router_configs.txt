@@ -1,0 +1,155 @@
+R1
+----
+
+enable 
+config t
+ho R1
+int fa 0/0
+ip add  10.0.0.1 255.0.0.0
+no sh 
+exit
+int fa 0/1
+ip add 20.0.0.1 255.0.0.0
+no sh
+exit
+
+
+#default routing
+ ip route 0.0.0.0 0.0.0.0 20.0.0.2
+
+# dhcp relay
+int fa 0/0
+ip helper-address 20.0.0.2
+exit
+
+R2
+----
+enable 
+config t
+ho R2
+int fa 0/0
+ip add  172.16.0.1 255.255.0.0
+no sh 
+exit
+int fa 0/1
+ip add 30.0.0.1 255.0.0.0
+no sh
+exit
+
+
+#default routing
+ ip route 0.0.0.0 0.0.0.0 30.0.0.2
+
+# dhcp relay
+int fa 0/0
+ip helper-address 30.0.0.2
+exit
+
+R3
+----
+enable 
+config t
+ho R3
+int fa 0/0
+ip add  192.168.1.1 255.255.255.0
+no sh 
+exit
+int fa 0/1
+ip add 40.0.0.1 255.0.0.0
+no sh
+exit
+
+
+#default routing
+ ip route 0.0.0.0 0.0.0.0 40.0.0.2
+
+# dhcp relay
+int fa 0/0
+ip helper-address 40.0.0.2
+exit
+
+R4
+----
+enable 
+config t
+ho R4
+int fa 0/0
+ip add 172.17.0.1 255.255.0.0
+no sh 
+exit
+int fa 0/1
+ip add 50.0.0.1 255.0.0.0
+no sh
+exit
+
+
+#default routing
+ ip route 0.0.0.0 0.0.0.0 50.0.0.2
+
+# dhcp relay
+int fa 0/0
+ip helper-address 50.0.0.2
+exit
+
+R5
+----
+enable 
+config t
+ho R5
+int fa 0/0
+ip add  20.0.0.2 255.0.0.0
+no sh 
+exit
+
+int fa 0/1
+ip add 30.0.0.2 255.0.0.0
+no sh
+exit
+
+int eth 1/1
+ip add 40.0.0.2 255.0.0.0
+no sh
+exit
+
+int eth 1/0
+ip add 50.0.0.2 255.0.0.0
+no sh
+exit
+
+#default routing
+
+ip route 10.0.0.0 255.0.0.0 20.0.0.1
+ip route 172.16.0.0 255.255.0.0 30.0.0.1
+ip route 192.168.1.0 255.255.255.0 40.0.0.1
+ip route 172.17.0.0 255.255.0.0 50.0.0.1
+
+# dhcp config
+
+ip dhcp pool che
+network 10.0.0.0 255.0.0.0
+default-router 10.0.0.1
+dns-server 172.16.0.10
+exit
+
+ip dhcp pool pune
+network 172.16.0.0 255.255.0.0
+default-router 172.16.0.1
+dns-server 172.16.0.10
+exit
+
+ip dhcp pool mumbai
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+dns-server 172.16.0.10
+exit
+
+ip dhcp pool hyd
+network 172.17.0.0 255.255.0.0
+default-router 172.17.0.1
+dns-server 172.16.0.10
+exit
+
+
+
+
+
